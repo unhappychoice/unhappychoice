@@ -1,6 +1,6 @@
 ### unhappychoice
 
-- Full stack developer
+- Full stack engineer
   - API / Web server
   - iOS / Android application
   - SPA
