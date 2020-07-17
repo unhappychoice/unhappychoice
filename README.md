@@ -1,5 +1,3 @@
-### unhappychoice
-
 - Full stack engineer
 - API / Web application / iOS / Android / SPA / Infrastructure / Automation / Everything to solve real-world problems
 
