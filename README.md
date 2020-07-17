@@ -1,4 +1,4 @@
-- Full stack engineer
+- A full stack software engineer
 - Ruby, Swift, Kotlin, TypeScript, Scala, Haskell
 - Web / API / iOS / Android / SPA / Infrastructure / Everything to solve real-world problems
 - now: [@seibii](https://github.com/seibii) VPoE
