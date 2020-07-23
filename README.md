@@ -1,5 +1,5 @@
 - A full stack software engineer
-- Ruby, Swift, Kotlin, TypeScript, Scala, Haskell
+- Ruby, Swift, Kotlin, TypeScript, Scala
 - Web / API / iOS / Android / SPA / Infrastructure / Everything to solve real-world problems
 - now: [@seibii](https://github.com/seibii) VPoE
 - ex: [@appbrew](https://github.com/appbrew) / [@legalforce](https://github.com/legalforce) / [@oneteam-dev](https://github.com/oneteam-dev)
