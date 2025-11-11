@@ -7,4 +7,5 @@
 |:--------- |:----- |:----- |
 | <br><ul><li>Programming :computer: &nbsp;( obviously</li><li>UI design :art:</li><li>Math / Physics</li><li>Drumming :drum: &nbsp;/ Singing :microphone:</li><li>SF movies :clapper:</li></ul> | <blockquote>Knowledge is power, France is Bacon</blockquote>:fr: `==` :bacon:<br><br>Ref: https://franceisbacon.com | <br><ul><li>[blog](https://blog.unhappychoice.com)</li><li>[RubyGems.org](https://rubygems.org/profiles/unhappychoice)</li><li>[npm](https://www.npmjs.com/~unhappychoice)</li><li>[Linkedin](https://www.linkedin.com/in/裕史-上木-4a17a5101)</li><li>[Twitter](https://twitter.com/unhappychoice_e)</li></ul>|
 
-[![committers.top badge](https://user-badge.committers.top/japan_private/unhappychoice.svg)](https://user-badge.committers.top/japan/unhappychoice)
+[![committers.top badge](https://user-badge.committers.top/japan_private/unhappychoice.svg)](https://user-badge.committers.top/japan/unhappychoice)  
+[![Total Stars](https://img.shields.io/github/stars/unhappychoice?affiliations=OWNER%2CCOLLABORATOR&style=flat&label=GitHub%20total%20stars&logo=github)](https://github.com/unhappychoice?tab=repositories)  
