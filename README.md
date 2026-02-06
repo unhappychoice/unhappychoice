@@ -9,3 +9,4 @@
 
 [![committers.top badge](https://user-badge.committers.top/japan_private/unhappychoice.svg)](https://user-badge.committers.top/japan_private/unhappychoice)  
 [![Total Stars](https://img.shields.io/github/stars/unhappychoice?affiliations=OWNER%2CCOLLABORATOR&style=flat&label=GitHub%20total%20stars&logo=github)](https://github.com/unhappychoice?tab=repositories)  
+[![GPG Key](https://gpg-badge.hesreallyhim.com/unhappychoice.svg?style=flat)](https://github.com/unhappychoice.gpg)
