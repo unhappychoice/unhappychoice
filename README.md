@@ -1,8 +1,10 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://unhappychoice.github.io/weekly-report/card-dark.svg" />
-  <source media="(prefers-color-scheme: light)" srcset="https://unhappychoice.github.io/weekly-report/card.svg" />
-  <img alt="Weekly Report" src="https://unhappychoice.github.io/weekly-report/card.svg" />
-</picture>
+<a href="https://github.com/unhappychoice/weekly-report">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://unhappychoice.github.io/weekly-report/card-dark.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="https://unhappychoice.github.io/weekly-report/card.svg" />
+    <img alt="Weekly Report" src="https://unhappychoice.github.io/weekly-report/card.svg" />
+  </picture>
+</a>
 
 - A full stack software engineer
 - Rust, TypeScript, Ruby, Swift, Kotlin, Scala
