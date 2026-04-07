@@ -1,3 +1,9 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://unhappychoice.github.io/weekly-report/card-dark.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="https://unhappychoice.github.io/weekly-report/card.svg" />
+  <img alt="Weekly Report" src="https://unhappychoice.github.io/weekly-report/card.svg" />
+</picture>
+
 - A full stack software engineer
 - Rust, TypeScript, Ruby, Swift, Kotlin, Scala
 - Web, API, iOS, Android, SPA, Infrastructure, Everything to solve real-world problems
