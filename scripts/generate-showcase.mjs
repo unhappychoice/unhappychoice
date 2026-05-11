@@ -160,9 +160,7 @@ const FONT = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, s
 
 const THEMES = {
   light: {
-    bg: '#f6f8fa',
-    card: '#ffffff',
-    border: '#d8dee4',
+    bg: '#ffffff',
     text: '#1f2328',
     muted: '#59636e',
     title: '#0969da',
@@ -170,12 +168,9 @@ const THEMES = {
     spark: '#0969da',
     sparkFill: 'rgba(9, 105, 218, 0.15)',
     placeholder: '#eaeef2',
-    shadow: 'rgba(31, 35, 40, 0.12)',
   },
   dark: {
-    bg: '#010409',
-    card: '#161b22',
-    border: '#30363d',
+    bg: '#0d1117',
     text: '#e6edf3',
     muted: '#8d96a0',
     title: '#58a6ff',
@@ -183,7 +178,6 @@ const THEMES = {
     spark: '#58a6ff',
     sparkFill: 'rgba(88, 166, 255, 0.22)',
     placeholder: '#21262d',
-    shadow: 'rgba(0, 0, 0, 0.45)',
   },
 };
 
@@ -251,7 +245,6 @@ const renderCard = (i, { repo, og, participation, events }, theme) => {
     : `<text x="${INFO_X}" y="${eventsStartY}" font-family="${FONT}" font-size="11" fill="${theme.muted}" font-style="italic">No recent activity</text>`;
 
   return `<g transform="translate(0, ${i * (CARD_H + CARD_GAP)})">
-    <rect width="${CARD_W}" height="${CARD_H}" rx="10" ry="10" fill="${theme.card}" stroke="${theme.border}" filter="url(#card-shadow)" />
     ${ogBlock}
     <text x="${INFO_X}" y="${titleY}" font-family="${FONT}" font-size="16" font-weight="700" fill="${theme.title}">${escape(repo.name)}</text>
     <text x="${INFO_X + INFO_W}" y="${titleY}" font-family="${FONT}" font-size="13" font-weight="600" fill="${theme.star}" text-anchor="end">★ ${repo.stargazers_count.toLocaleString()}</text>
@@ -268,11 +261,6 @@ const render = (cards, themeName) => {
   const H = HEADER_H + PAD_OUT + cards.length * (CARD_H + CARD_GAP) - CARD_GAP + PAD_OUT;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Featured Projects">
-  <defs>
-    <filter id="card-shadow" x="-2%" y="-10%" width="104%" height="125%">
-      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="${theme.shadow}" />
-    </filter>
-  </defs>
   <rect width="${W}" height="${H}" fill="${theme.bg}" />
   <text x="${PAD_OUT}" y="${PAD_OUT + 18}" font-family="${FONT}" font-size="16" font-weight="700" fill="${theme.text}">Featured Projects</text>
   <text x="${W - PAD_OUT}" y="${PAD_OUT + 18}" text-anchor="end" font-family="${FONT}" font-size="11" fill="${theme.muted}">@${USER}</text>
