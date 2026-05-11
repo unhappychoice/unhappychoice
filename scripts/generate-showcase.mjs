@@ -267,9 +267,10 @@ const renderCard = (i, { repo, og, grass, totalCommits, events, link }, theme) =
   const href = link ?? repo.html_url;
 
   const titleY = 28;
-  const grassY = titleY + 14;
-  const statsY = grassY + GRASS_H + 20;
-  const eventsStartY = statsY + 20;
+  const descY = titleY + 16;
+  const grassY = descY + 16;
+  const statsY = grassY + GRASS_H + 18;
+  const eventsStartY = statsY + 18;
   const eventLineH = 16;
 
   const ogBlock = og
@@ -300,6 +301,7 @@ const renderCard = (i, { repo, og, grass, totalCommits, events, link }, theme) =
       ${ogBlock}
       <text class="fade-in" style="animation-delay:80ms" x="${INFO_X}" y="${titleY}" font-family="${FONT}" font-size="16" font-weight="700" fill="${theme.title}">${escape(repo.name)}</text>
       <text class="fade-in" style="animation-delay:160ms" x="${INFO_X + INFO_W}" y="${titleY}" font-family="${FONT}" font-size="13" font-weight="600" fill="${theme.star}" text-anchor="end">★ ${repo.stargazers_count.toLocaleString()}</text>
+      <text class="fade-in" style="animation-delay:140ms" x="${INFO_X}" y="${descY}" font-family="${FONT}" font-size="11" fill="${theme.muted}">${escape(truncate(repo.description ?? '', 60))}</text>
       ${grassBlock}
       <text class="fade-in" style="animation-delay:1000ms" x="${INFO_X}" y="${statsY}" font-family="${FONT}" font-size="11" fill="${theme.muted}">${totalCommits.toLocaleString()} commits / 52w · pushed ${relativeTime(repo.pushed_at)}</text>
       ${eventBlock}
