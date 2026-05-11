@@ -2,7 +2,8 @@ name: Generate Showcase
 
 on:
   schedule:
-    - cron: '17 0 * * *'
+    # 05:00 JST (20:00 UTC previous day)
+    - cron: '0 20 * * *'
   workflow_dispatch:
   push:
     branches: [master]
