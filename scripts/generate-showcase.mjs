@@ -80,21 +80,48 @@ const fetchOgDataUri = async (fullName) => {
   }
 };
 
-const fetchParticipation = async (fullName) => {
-  for (let attempt = 0; attempt < 3; attempt++) {
+const DAY_MS = 86400 * 1000;
+const GRASS_DAYS = 364;
+
+const fetchDailyCommits = async (fullName) => {
+  const since = new Date(Date.now() - GRASS_DAYS * DAY_MS).toISOString();
+  const counts = Object.create(null);
+  for (let page = 1; page <= 30; page++) {
     try {
-      const data = await fetchJson(`https://api.github.com/repos/${fullName}/stats/participation`);
-      if (data._computing) {
-        await new Promise((r) => setTimeout(r, 2000));
-        continue;
+      const commits = await fetchJson(
+        `https://api.github.com/repos/${fullName}/commits?author=${USER}&since=${since}&per_page=100&page=${page}`,
+      );
+      if (!Array.isArray(commits) || commits.length === 0) break;
+      for (const c of commits) {
+        const date = c.commit?.author?.date?.slice(0, 10);
+        if (date) counts[date] = (counts[date] ?? 0) + 1;
       }
-      return data;
+      if (commits.length < 100) break;
     } catch (e) {
-      console.warn(`participation ${fullName}: ${e.message}`);
-      return null;
+      console.warn(`commits ${fullName} page ${page}: ${e.message}`);
+      break;
     }
   }
-  return null;
+  return counts;
+};
+
+const buildGrassGrid = (dateCounts) => {
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  const todayDow = today.getUTCDay();
+  const start = new Date(today);
+  start.setUTCDate(today.getUTCDate() - todayDow - 51 * 7);
+  const grid = Array.from({ length: 52 }, () => Array(7).fill(0));
+  for (let col = 0; col < 52; col++) {
+    for (let row = 0; row < 7; row++) {
+      const date = new Date(start);
+      date.setUTCDate(start.getUTCDate() + col * 7 + row);
+      if (date > today) continue;
+      const key = date.toISOString().slice(0, 10);
+      grid[col][row] = dateCounts[key] ?? 0;
+    }
+  }
+  return grid;
 };
 
 const fetchRepoEvents = async (fullName) => {
@@ -165,9 +192,8 @@ const THEMES = {
     muted: '#59636e',
     title: '#0969da',
     star: '#bf8700',
-    spark: '#0969da',
-    sparkFill: 'rgba(9, 105, 218, 0.15)',
     placeholder: '#eaeef2',
+    grass: ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39'],
   },
   dark: {
     bg: '#0d1117',
@@ -175,9 +201,8 @@ const THEMES = {
     muted: '#8d96a0',
     title: '#58a6ff',
     star: '#e3b341',
-    spark: '#58a6ff',
-    sparkFill: 'rgba(88, 166, 255, 0.22)',
     placeholder: '#21262d',
+    grass: ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'],
   },
 };
 
@@ -195,33 +220,44 @@ const OG_H = 176;
 const INFO_X = OG_X + OG_W + 18;
 const INFO_W = CARD_W - INFO_X - 14;
 
-const renderSparkline = (values, x, y, w, h, theme) => {
-  if (!values?.length) return '';
-  const max = Math.max(1, ...values);
-  const stepX = w / Math.max(1, values.length - 1);
-  const pts = values.map((v, i) => {
-    const px = x + i * stepX;
-    const py = y + h - (v / max) * h;
-    return `${px.toFixed(2)},${py.toFixed(2)}`;
-  });
-  const lastX = x + w;
-  const area = `M ${pts.join(' L ')} L ${lastX.toFixed(2)},${(y + h).toFixed(2)} L ${x.toFixed(2)},${(y + h).toFixed(2)} Z`;
-  return `<path d="${area}" fill="${theme.sparkFill}" />
-    <polyline points="${pts.join(' ')}" fill="none" stroke="${theme.spark}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />`;
+const GRASS_CELL = 7;
+const GRASS_GAP = 2;
+const GRASS_WEEKS = 52;
+const GRASS_W = GRASS_WEEKS * (GRASS_CELL + GRASS_GAP) - GRASS_GAP;
+const GRASS_H = 7 * (GRASS_CELL + GRASS_GAP) - GRASS_GAP;
+
+const renderGrass = (grid, x, y, theme) => {
+  if (!grid?.length) return '';
+  const allCounts = grid.flat();
+  const max = Math.max(1, ...allCounts);
+  const bucket = (c) => {
+    if (c === 0) return 0;
+    const r = c / max;
+    if (r <= 0.25) return 1;
+    if (r <= 0.5) return 2;
+    if (r <= 0.75) return 3;
+    return 4;
+  };
+  const step = GRASS_CELL + GRASS_GAP;
+  return grid
+    .flatMap((week, xi) =>
+      week.map((count, yi) => {
+        const cx = x + xi * step;
+        const cy = y + yi * step;
+        return `<rect x="${cx}" y="${cy}" width="${GRASS_CELL}" height="${GRASS_CELL}" rx="1.5" ry="1.5" fill="${theme.grass[bucket(count)]}" />`;
+      }),
+    )
+    .join('');
 };
 
-const renderCard = (i, { repo, og, participation, events }, theme) => {
+const renderCard = (i, { repo, og, grass, totalCommits, events }, theme) => {
   const evs = pickEvents(events);
-  const ownerCommits = participation?.owner ?? [];
-  const totalCommits = ownerCommits.reduce((a, b) => a + b, 0);
   const clipId = `og-${i}-${theme === THEMES.dark ? 'd' : 'l'}`;
 
   const titleY = 28;
-  const sparkY = titleY + 14;
-  const sparkH = 28;
-  const sparkW = INFO_W * 0.62;
-  const statsY = sparkY + sparkH + 16;
-  const eventsStartY = statsY + 18;
+  const grassY = titleY + 14;
+  const statsY = grassY + GRASS_H + 20;
+  const eventsStartY = statsY + 20;
   const eventLineH = 16;
 
   const ogBlock = og
@@ -230,9 +266,9 @@ const renderCard = (i, { repo, og, participation, events }, theme) => {
     : `<rect x="${OG_X}" y="${OG_Y}" width="${OG_W}" height="${OG_H}" rx="6" ry="6" fill="${theme.placeholder}" />
     <text x="${OG_X + OG_W / 2}" y="${OG_Y + OG_H / 2}" font-family="${FONT}" font-size="13" fill="${theme.muted}" text-anchor="middle" dominant-baseline="middle">${escape(repo.name)}</text>`;
 
-  const sparkBlock = ownerCommits.some((v) => v > 0)
-    ? renderSparkline(ownerCommits, INFO_X, sparkY, sparkW, sparkH, theme)
-    : `<text x="${INFO_X}" y="${sparkY + sparkH / 2 + 4}" font-family="${FONT}" font-size="10" fill="${theme.muted}">no commits in last 52 weeks</text>`;
+  const grassBlock = totalCommits > 0
+    ? renderGrass(grass, INFO_X, grassY, theme)
+    : `<text x="${INFO_X}" y="${grassY + GRASS_H / 2 + 4}" font-family="${FONT}" font-size="10" fill="${theme.muted}">no commits in last 52 weeks</text>`;
 
   const eventBlock = evs.length
     ? evs
@@ -248,9 +284,8 @@ const renderCard = (i, { repo, og, participation, events }, theme) => {
     ${ogBlock}
     <text x="${INFO_X}" y="${titleY}" font-family="${FONT}" font-size="16" font-weight="700" fill="${theme.title}">${escape(repo.name)}</text>
     <text x="${INFO_X + INFO_W}" y="${titleY}" font-family="${FONT}" font-size="13" font-weight="600" fill="${theme.star}" text-anchor="end">★ ${repo.stargazers_count.toLocaleString()}</text>
-    ${sparkBlock}
-    <text x="${INFO_X + INFO_W}" y="${sparkY + sparkH / 2 + 4}" font-family="${FONT}" font-size="10" fill="${theme.muted}" text-anchor="end">${totalCommits.toLocaleString()} commits / 52w</text>
-    <text x="${INFO_X}" y="${statsY}" font-family="${FONT}" font-size="11" fill="${theme.muted}">pushed ${relativeTime(repo.pushed_at)}</text>
+    ${grassBlock}
+    <text x="${INFO_X}" y="${statsY}" font-family="${FONT}" font-size="11" fill="${theme.muted}">${totalCommits.toLocaleString()} commits / 52w · pushed ${relativeTime(repo.pushed_at)}</text>
     ${eventBlock}
   </g>`;
 };
@@ -276,15 +311,17 @@ console.log(`Repos: ${repos.map((r) => r.name).join(', ')}`);
 
 const enriched = await Promise.all(
   repos.map(async (repo) => {
-    const [og, participation, events] = await Promise.all([
+    const [og, dailyCounts, events] = await Promise.all([
       fetchOgDataUri(repo.full_name),
-      fetchParticipation(repo.full_name),
+      fetchDailyCommits(repo.full_name),
       fetchRepoEvents(repo.full_name),
     ]);
+    const grass = buildGrassGrid(dailyCounts);
+    const totalCommits = Object.values(dailyCounts).reduce((a, b) => a + b, 0);
     console.log(
-      `  ${repo.name}: og=${og ? `${Math.round(og.length / 1024)}KB` : 'fallback'}, participation=${participation ? 'ok' : 'n/a'}, events=${events.length}`,
+      `  ${repo.name}: og=${og ? `${Math.round(og.length / 1024)}KB` : 'fallback'}, commits=${totalCommits}, events=${events.length}`,
     );
-    return { repo, og, participation, events };
+    return { repo, og, grass, totalCommits, events };
   }),
 );
 
