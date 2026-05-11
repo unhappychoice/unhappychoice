@@ -299,7 +299,7 @@ const renderCard = (i, { repo, og, grass, totalCommits, events, link }, theme) =
     <g transform="translate(0, ${i * (CARD_H + CARD_GAP)})">
       ${ogBlock}
       <text class="fade-in" style="animation-delay:80ms" x="${INFO_X}" y="${titleY}" font-family="${FONT}" font-size="16" font-weight="700" fill="${theme.title}">${escape(repo.name)}</text>
-      <text class="star fade-in" style="animation-delay:160ms" x="${INFO_X + INFO_W}" y="${titleY}" font-family="${FONT}" font-size="13" font-weight="600" fill="${theme.star}" text-anchor="end">★ ${repo.stargazers_count.toLocaleString()}</text>
+      <text class="fade-in" style="animation-delay:160ms" x="${INFO_X + INFO_W}" y="${titleY}" font-family="${FONT}" font-size="13" font-weight="600" fill="${theme.star}" text-anchor="end">★ ${repo.stargazers_count.toLocaleString()}</text>
       ${grassBlock}
       <text class="fade-in" style="animation-delay:1000ms" x="${INFO_X}" y="${statsY}" font-family="${FONT}" font-size="11" fill="${theme.muted}">${totalCommits.toLocaleString()} commits / 52w · pushed ${relativeTime(repo.pushed_at)}</text>
       ${eventBlock}
@@ -338,16 +338,6 @@ const renderOne = (card, themeName) => {
     @keyframes fade-in {
       from { opacity: 0; transform: translateY(4px); }
       to   { opacity: 1; transform: translateY(0); }
-    }
-    .star.fade-in {
-      animation: fade-in 520ms ease-out 160ms backwards,
-                 star-shimmer 2.6s ease-in-out 2.2s infinite;
-      transform-origin: center;
-      transform-box: fill-box;
-    }
-    @keyframes star-shimmer {
-      0%, 100% { filter: brightness(1) drop-shadow(0 0 0 transparent); }
-      50%      { filter: brightness(1.5) drop-shadow(0 0 3px #ffd700); }
     }
     text.fade-in, image.fade-in, g.fade-in {
       transform-box: fill-box;
