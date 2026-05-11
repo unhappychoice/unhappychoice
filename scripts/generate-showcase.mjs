@@ -220,8 +220,8 @@ const OG_H = 176;
 const INFO_X = OG_X + OG_W + 18;
 const INFO_W = CARD_W - INFO_X - 14;
 
-const GRASS_CELL = 7;
-const GRASS_GAP = 2;
+const GRASS_CELL = 6;
+const GRASS_GAP = 1;
 const GRASS_WEEKS = 52;
 const GRASS_W = GRASS_WEEKS * (GRASS_CELL + GRASS_GAP) - GRASS_GAP;
 const GRASS_H = 7 * (GRASS_CELL + GRASS_GAP) - GRASS_GAP;
