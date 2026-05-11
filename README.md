@@ -6,13 +6,50 @@
   </picture>
 </a>
 
+[![committers.top badge](https://user-badge.committers.top/japan_private/unhappychoice.svg)](https://user-badge.committers.top/japan_private/unhappychoice) [![Total Stars](https://img.shields.io/github/stars/unhappychoice?affiliations=OWNER%2CCOLLABORATOR&style=flat&label=GitHub%20total%20stars&logo=github)](https://github.com/unhappychoice?tab=repositories)
+
 - A full stack software engineer
 - Rust, TypeScript, Ruby, Swift, Kotlin, Scala
 - Web, API, iOS, Android, SPA, Infrastructure, Everything to solve real-world problems
 - ex: [@orderlyjp](https://github.com/orderlyjp) / [@seibii](https://github.com/seibii) / [@appbrew](https://github.com/appbrew) / [@oneteam-dev](https://github.com/oneteam-dev)
+- [blog](https://blog.unhappychoice.com) · [Weekly Report](https://unhappychoice.github.io/weekly-report/) · [Zenn](https://zenn.dev/unhappychoice) · [Qiita](https://qiita.com/unhappychoice) · [crates.io](https://crates.io/users/unhappychoice) · [RubyGems](https://rubygems.org/profiles/unhappychoice) · [npm](https://www.npmjs.com/~unhappychoice) · [LinkedIn](https://www.linkedin.com/in/裕史-上木-4a17a5101) · [X](https://twitter.com/unhappychoice_e)
 
-| Interests&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Motto&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Links&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
-|:--------- |:----- |:----- |
-| <br><ul><li>Programming :computer: &nbsp;( obviously</li><li>UI design :art:</li><li>Math / Physics</li><li>Drumming :drum: &nbsp;/ Singing :microphone:</li><li>SF movies :clapper:</li></ul> | <blockquote>Knowledge is power, France is Bacon</blockquote>:fr: `==` :bacon:<br><br>Ref: [Reddit comment](https://www.reddit.com/r/AskReddit/comments/dxosj/comment/c13pbyc) | <br><ul><li>[blog](https://blog.unhappychoice.com)</li><li>[RubyGems.org](https://rubygems.org/profiles/unhappychoice)</li><li>[npm](https://www.npmjs.com/~unhappychoice)</li><li>[Linkedin](https://www.linkedin.com/in/裕史-上木-4a17a5101)</li><li>[Twitter](https://twitter.com/unhappychoice_e)</li></ul>|
+## Featured Projects
 
-[![committers.top badge](https://user-badge.committers.top/japan_private/unhappychoice.svg)](https://user-badge.committers.top/japan_private/unhappychoice) [![Total Stars](https://img.shields.io/github/stars/unhappychoice?affiliations=OWNER%2CCOLLABORATOR&style=flat&label=GitHub%20total%20stars&logo=github)](https://github.com/unhappychoice?tab=repositories)  
+<!-- featured:start -->
+<div align="center">
+  <a href="https://github.com/unhappychoice/splashboard">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./showcase-splashboard-dark.svg" />
+      <source media="(prefers-color-scheme: light)" srcset="./showcase-splashboard.svg" />
+      <img alt="splashboard" src="./showcase-splashboard.svg" />
+    </picture>
+  </a>
+  <a href="https://github.com/unhappychoice/gitlogue">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./showcase-gitlogue-dark.svg" />
+      <source media="(prefers-color-scheme: light)" srcset="./showcase-gitlogue.svg" />
+      <img alt="gitlogue" src="./showcase-gitlogue.svg" />
+    </picture>
+  </a>
+  <a href="https://github.com/unhappychoice/gittype">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./showcase-gittype-dark.svg" />
+      <source media="(prefers-color-scheme: light)" srcset="./showcase-gittype.svg" />
+      <img alt="gittype" src="./showcase-gittype.svg" />
+    </picture>
+  </a>
+  <a href="https://github.com/unhappychoice/mdts">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./showcase-mdts-dark.svg" />
+      <source media="(prefers-color-scheme: light)" srcset="./showcase-mdts.svg" />
+      <img alt="mdts" src="./showcase-mdts.svg" />
+    </picture>
+  </a>
+</div>
+<!-- featured:end -->
+
+<div align="center">
+  <a href="https://unhappychoice.com/oss/"><sub>See more →</sub></a>
+</div>
+
