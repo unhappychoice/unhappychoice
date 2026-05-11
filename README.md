@@ -11,7 +11,7 @@
 - Web, API, iOS, Android, SPA, Infrastructure, Everything to solve real-world problems
 - ex: [@orderlyjp](https://github.com/orderlyjp) / [@seibii](https://github.com/seibii) / [@appbrew](https://github.com/appbrew) / [@oneteam-dev](https://github.com/oneteam-dev)
 
-[blog](https://blog.unhappychoice.com) · [RubyGems](https://rubygems.org/profiles/unhappychoice) · [npm](https://www.npmjs.com/~unhappychoice) · [LinkedIn](https://www.linkedin.com/in/裕史-上木-4a17a5101) · [X](https://twitter.com/unhappychoice_e)
+[blog](https://blog.unhappychoice.com) · [crates.io](https://crates.io/users/unhappychoice) · [RubyGems](https://rubygems.org/profiles/unhappychoice) · [npm](https://www.npmjs.com/~unhappychoice) · [LinkedIn](https://www.linkedin.com/in/裕史-上木-4a17a5101) · [X](https://twitter.com/unhappychoice_e)
 
 [![committers.top badge](https://user-badge.committers.top/japan_private/unhappychoice.svg)](https://user-badge.committers.top/japan_private/unhappychoice) [![Total Stars](https://img.shields.io/github/stars/unhappychoice?affiliations=OWNER%2CCOLLABORATOR&style=flat&label=GitHub%20total%20stars&logo=github)](https://github.com/unhappychoice?tab=repositories)
 
