@@ -248,7 +248,7 @@ const renderGrass = (grid, x, y, theme) => {
       week.map((count, yi) => {
         const cx = x + xi * step;
         const cy = y + yi * step;
-        const delay = xi * 18 + yi * 4;
+        const delay = 200 + xi * 12 + yi * 3;
         return `<rect class="cell" style="animation-delay:${delay}ms" x="${cx}" y="${cy}" width="${GRASS_CELL}" height="${GRASS_CELL}" rx="1.5" ry="1.5" fill="${theme.grass[bucket(count)]}" />`;
       }),
     )
@@ -268,9 +268,11 @@ const renderCard = (i, { repo, og, grass, totalCommits, events, link }, theme) =
 
   const ogBlock = og
     ? `<defs><clipPath id="${clipId}"><rect x="${OG_X}" y="${OG_Y}" width="${OG_W}" height="${OG_H}" rx="6" ry="6" /></clipPath></defs>
-    <image x="${OG_X}" y="${OG_Y}" width="${OG_W}" height="${OG_H}" href="${og}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${clipId})" />`
-    : `<rect x="${OG_X}" y="${OG_Y}" width="${OG_W}" height="${OG_H}" rx="6" ry="6" fill="${theme.placeholder}" />
-    <text x="${OG_X + OG_W / 2}" y="${OG_Y + OG_H / 2}" font-family="${FONT}" font-size="13" fill="${theme.muted}" text-anchor="middle" dominant-baseline="middle">${escape(repo.name)}</text>`;
+    <image class="fade-in" style="animation-delay:0ms" x="${OG_X}" y="${OG_Y}" width="${OG_W}" height="${OG_H}" href="${og}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${clipId})" />`
+    : `<g class="fade-in" style="animation-delay:0ms">
+      <rect x="${OG_X}" y="${OG_Y}" width="${OG_W}" height="${OG_H}" rx="6" ry="6" fill="${theme.placeholder}" />
+      <text x="${OG_X + OG_W / 2}" y="${OG_Y + OG_H / 2}" font-family="${FONT}" font-size="13" fill="${theme.muted}" text-anchor="middle" dominant-baseline="middle">${escape(repo.name)}</text>
+    </g>`;
 
   const grassBlock = totalCommits > 0
     ? renderGrass(grass, INFO_X, grassY, theme)
@@ -280,19 +282,20 @@ const renderCard = (i, { repo, og, grass, totalCommits, events, link }, theme) =
     ? evs
         .map((e, idx) => {
           const ey = eventsStartY + idx * eventLineH;
-          return `<text x="${INFO_X}" y="${ey}" font-family="${FONT}" font-size="11" fill="${theme.text}">• ${escape(truncate(e.text, 44))}</text>
-    <text x="${INFO_X + INFO_W}" y="${ey}" font-family="${FONT}" font-size="10" fill="${theme.muted}" text-anchor="end">${escape(e.ago)}</text>`;
+          const delay = 1100 + idx * 90;
+          return `<text class="fade-in" style="animation-delay:${delay}ms" x="${INFO_X}" y="${ey}" font-family="${FONT}" font-size="11" fill="${theme.text}">• ${escape(truncate(e.text, 44))}</text>
+    <text class="fade-in" style="animation-delay:${delay}ms" x="${INFO_X + INFO_W}" y="${ey}" font-family="${FONT}" font-size="10" fill="${theme.muted}" text-anchor="end">${escape(e.ago)}</text>`;
         })
         .join('\n    ')
-    : `<text x="${INFO_X}" y="${eventsStartY}" font-family="${FONT}" font-size="11" fill="${theme.muted}" font-style="italic">No recent activity</text>`;
+    : `<text class="fade-in" style="animation-delay:1100ms" x="${INFO_X}" y="${eventsStartY}" font-family="${FONT}" font-size="11" fill="${theme.muted}" font-style="italic">No recent activity</text>`;
 
   return `<a href="${escape(href)}" target="_blank">
     <g transform="translate(0, ${i * (CARD_H + CARD_GAP)})">
       ${ogBlock}
-      <text x="${INFO_X}" y="${titleY}" font-family="${FONT}" font-size="16" font-weight="700" fill="${theme.title}">${escape(repo.name)}</text>
-      <text x="${INFO_X + INFO_W}" y="${titleY}" font-family="${FONT}" font-size="13" font-weight="600" fill="${theme.star}" text-anchor="end">★ ${repo.stargazers_count.toLocaleString()}</text>
+      <text class="fade-in" style="animation-delay:80ms" x="${INFO_X}" y="${titleY}" font-family="${FONT}" font-size="16" font-weight="700" fill="${theme.title}">${escape(repo.name)}</text>
+      <text class="star fade-in" style="animation-delay:160ms" x="${INFO_X + INFO_W}" y="${titleY}" font-family="${FONT}" font-size="13" font-weight="600" fill="${theme.star}" text-anchor="end">★ ${repo.stargazers_count.toLocaleString()}</text>
       ${grassBlock}
-      <text x="${INFO_X}" y="${statsY}" font-family="${FONT}" font-size="11" fill="${theme.muted}">${totalCommits.toLocaleString()} commits / 52w · pushed ${relativeTime(repo.pushed_at)}</text>
+      <text class="fade-in" style="animation-delay:1000ms" x="${INFO_X}" y="${statsY}" font-family="${FONT}" font-size="11" fill="${theme.muted}">${totalCommits.toLocaleString()} commits / 52w · pushed ${relativeTime(repo.pushed_at)}</text>
       ${eventBlock}
     </g>
   </a>`;
@@ -315,11 +318,23 @@ const renderOne = (card, themeName) => {
       to   { opacity: 1; transform: scale(1); }
     }
     .fade-in {
-      animation: fade-in 480ms ease-out backwards;
+      animation: fade-in 520ms ease-out backwards;
     }
     @keyframes fade-in {
-      from { opacity: 0; }
-      to   { opacity: 1; }
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .star.fade-in {
+      animation: fade-in 520ms ease-out 160ms backwards, star-pulse 3.6s ease-in-out 2.5s infinite;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+    @keyframes star-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.78; transform: scale(0.96); }
+    }
+    text.fade-in, image.fade-in, g.fade-in {
+      transform-box: fill-box;
     }
   </style>
   <rect width="${W}" height="${H}" fill="${theme.bg}" />
