@@ -1,9 +1,8 @@
 {
   "repos": [
+    "splashboard",
     "gitlogue",
     "gittype",
-    "mdts",
-    "steamfetch",
-    "splashboard"
+    "mdts"
   ]
 }
