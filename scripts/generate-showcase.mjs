@@ -251,9 +251,9 @@ const renderGrass = (grid, x, y, theme) => {
         const entryDelay = 200 + xi * 12 + yi * 3;
         const isActive = count > 0;
         const cls = isActive ? 'cell active' : 'cell';
-        const sparkleDelay = 2400 + ((xi * 71 + yi * 113) % 2200);
+        const waveDelay = 1500 + xi * 29;
         const styleAttr = isActive
-          ? `animation-delay:${entryDelay}ms,${sparkleDelay}ms`
+          ? `animation-delay:${entryDelay}ms,${waveDelay}ms`
           : `animation-delay:${entryDelay}ms`;
         return `<rect class="${cls}" style="${styleAttr}" x="${cx}" y="${cy}" width="${GRASS_CELL}" height="${GRASS_CELL}" rx="1.5" ry="1.5" fill="${theme.grass[bucket(count)]}" />`;
       }),
@@ -325,11 +325,12 @@ const renderOne = (card, themeName) => {
     }
     .cell.active {
       animation: cell-in 420ms cubic-bezier(0.16, 1, 0.3, 1) backwards,
-                 sparkle 2.4s ease-in-out infinite;
+                 wave 1.5s ease-in-out infinite;
     }
-    @keyframes sparkle {
+    @keyframes wave {
       0%, 100% { filter: brightness(1) drop-shadow(0 0 0 transparent); }
-      50%      { filter: brightness(1.6) drop-shadow(0 0 2px currentColor); }
+      4%       { filter: brightness(2.1) drop-shadow(0 0 4px currentColor); }
+      12%      { filter: brightness(1) drop-shadow(0 0 0 transparent); }
     }
     .fade-in {
       animation: fade-in 520ms ease-out backwards;
