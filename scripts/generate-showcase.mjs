@@ -55,12 +55,15 @@ const loadFeaturedConfig = async () => {
   return JSON.parse(text);
 };
 
-const fetchRepo = async (slug) => {
-  const fullName = slug.includes('/') ? slug : `${USER}/${slug}`;
-  return fetchJson(`https://api.github.com/repos/${fullName}`);
+const normalizeEntry = (entry) => {
+  if (typeof entry === 'string') return { name: entry, link: null };
+  return { name: entry.name, link: entry.link ?? null };
 };
 
-const fetchFeaturedRepos = async (slugs) => Promise.all(slugs.map(fetchRepo));
+const fetchRepo = async (name) => {
+  const fullName = name.includes('/') ? name : `${USER}/${name}`;
+  return fetchJson(`https://api.github.com/repos/${fullName}`);
+};
 
 const fetchOgDataUri = async (fullName) => {
   try {
@@ -251,9 +254,10 @@ const renderGrass = (grid, x, y, theme) => {
     .join('');
 };
 
-const renderCard = (i, { repo, og, grass, totalCommits, events }, theme) => {
+const renderCard = (i, { repo, og, grass, totalCommits, events, link }, theme) => {
   const evs = pickEvents(events);
   const clipId = `og-${i}-${theme === THEMES.dark ? 'd' : 'l'}`;
+  const href = link ?? repo.html_url;
 
   const titleY = 28;
   const grassY = titleY + 14;
@@ -281,7 +285,7 @@ const renderCard = (i, { repo, og, grass, totalCommits, events }, theme) => {
         .join('\n    ')
     : `<text x="${INFO_X}" y="${eventsStartY}" font-family="${FONT}" font-size="11" fill="${theme.muted}" font-style="italic">No recent activity</text>`;
 
-  return `<a href="${escape(repo.html_url)}" target="_blank">
+  return `<a href="${escape(href)}" target="_blank">
     <g transform="translate(0, ${i * (CARD_H + CARD_GAP)})">
       ${ogBlock}
       <text x="${INFO_X}" y="${titleY}" font-family="${FONT}" font-size="16" font-weight="700" fill="${theme.title}">${escape(repo.name)}</text>
@@ -293,26 +297,52 @@ const renderCard = (i, { repo, og, grass, totalCommits, events }, theme) => {
   </a>`;
 };
 
-const render = (cards, themeName) => {
+const renderOne = (card, themeName) => {
   const theme = THEMES[themeName];
   const W = CARD_W + PAD_OUT * 2;
-  const H = PAD_OUT + cards.length * (CARD_H + CARD_GAP) - CARD_GAP + PAD_OUT;
+  const H = CARD_H + PAD_OUT * 2;
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Featured Projects">
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${escape(card.repo.name)}">
   <rect width="${W}" height="${H}" fill="${theme.bg}" />
   <g transform="translate(${PAD_OUT}, ${PAD_OUT})">
-    ${cards.map((c, i) => renderCard(i, c, theme)).join('\n    ')}
+    ${renderCard(0, card, theme)}
   </g>
 </svg>
 `;
 };
 
+const renderReadmeBlock = (cards) => {
+  const links = cards
+    .map(({ repo, link }) => {
+      const href = link ?? repo.html_url;
+      const slug = repo.name;
+      return `  <a href="${escape(href)}">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./showcase-${slug}-dark.svg" />
+      <source media="(prefers-color-scheme: light)" srcset="./showcase-${slug}.svg" />
+      <img alt="${escape(slug)}" src="./showcase-${slug}.svg" />
+    </picture>
+  </a>`;
+    })
+    .join('\n');
+  return `<div align="center">\n${links}\n</div>`;
+};
+
+const replaceMarker = (text, section, content) => {
+  const start = `<!-- ${section}:start -->`;
+  const end = `<!-- ${section}:end -->`;
+  const re = new RegExp(`${start}[\\s\\S]*?${end}`);
+  if (!re.test(text)) throw new Error(`marker not found: ${section}`);
+  return text.replace(re, `${start}\n${content}\n${end}`);
+};
+
 const config = await loadFeaturedConfig();
-const repos = await fetchFeaturedRepos(config.repos);
+const entries = config.repos.map(normalizeEntry);
+const repos = await Promise.all(entries.map((e) => fetchRepo(e.name)));
 console.log(`Repos: ${repos.map((r) => r.name).join(', ')}`);
 
 const enriched = await Promise.all(
-  repos.map(async (repo) => {
+  repos.map(async (repo, idx) => {
     const [og, dailyCounts, events] = await Promise.all([
       fetchOgDataUri(repo.full_name),
       fetchDailyCommits(repo.full_name),
@@ -323,16 +353,21 @@ const enriched = await Promise.all(
     console.log(
       `  ${repo.name}: og=${og ? `${Math.round(og.length / 1024)}KB` : 'fallback'}, commits=${totalCommits}, events=${events.length}`,
     );
-    return { repo, og, grass, totalCommits, events };
+    return { repo, og, grass, totalCommits, events, link: entries[idx].link };
   }),
 );
 
-const lightSvg = render(enriched, 'light');
-const darkSvg = render(enriched, 'dark');
+for (const card of enriched) {
+  const slug = card.repo.name;
+  const lightSvg = renderOne(card, 'light');
+  const darkSvg = renderOne(card, 'dark');
+  await writeFile(resolve(REPO_ROOT, `showcase-${slug}.svg`), lightSvg);
+  await writeFile(resolve(REPO_ROOT, `showcase-${slug}-dark.svg`), darkSvg);
+  console.log(`  wrote showcase-${slug}.svg (${Math.round(lightSvg.length / 1024)}KB)`);
+}
 
-await writeFile(resolve(REPO_ROOT, 'showcase.svg'), lightSvg);
-await writeFile(resolve(REPO_ROOT, 'showcase-dark.svg'), darkSvg);
-
-console.log(
-  `Wrote showcase.svg (${Math.round(lightSvg.length / 1024)}KB), showcase-dark.svg (${Math.round(darkSvg.length / 1024)}KB)`,
-);
+const readmePath = resolve(REPO_ROOT, 'README.md');
+let readme = await readFile(readmePath, 'utf8');
+readme = replaceMarker(readme, 'featured', renderReadmeBlock(enriched));
+await writeFile(readmePath, readme);
+console.log('updated README.md');

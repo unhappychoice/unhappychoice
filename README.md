@@ -19,11 +19,36 @@
 
 ## Featured Projects
 
+<!-- featured:start -->
 <div align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./showcase-dark.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="./showcase.svg" />
-    <img alt="Featured Projects" src="./showcase.svg" />
-  </picture>
+  <a href="https://unhappychoice.com/oss/">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./showcase-splashboard-dark.svg" />
+      <source media="(prefers-color-scheme: light)" srcset="./showcase-splashboard.svg" />
+      <img alt="splashboard" src="./showcase-splashboard.svg" />
+    </picture>
+  </a>
+  <a href="https://unhappychoice.com/oss/">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./showcase-gitlogue-dark.svg" />
+      <source media="(prefers-color-scheme: light)" srcset="./showcase-gitlogue.svg" />
+      <img alt="gitlogue" src="./showcase-gitlogue.svg" />
+    </picture>
+  </a>
+  <a href="https://unhappychoice.com/oss/">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./showcase-gittype-dark.svg" />
+      <source media="(prefers-color-scheme: light)" srcset="./showcase-gittype.svg" />
+      <img alt="gittype" src="./showcase-gittype.svg" />
+    </picture>
+  </a>
+  <a href="https://unhappychoice.com/oss/">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./showcase-mdts-dark.svg" />
+      <source media="(prefers-color-scheme: light)" srcset="./showcase-mdts.svg" />
+      <img alt="mdts" src="./showcase-mdts.svg" />
+    </picture>
+  </a>
 </div>
+<!-- featured:end -->
 
