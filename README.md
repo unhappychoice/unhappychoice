@@ -19,9 +19,36 @@
 
 ## Featured Projects
 
+<!-- featured:start -->
+<table>
+  <tr>
+    <td align="center" colspan="4"><a href="https://github.com/unhappychoice/gitlogue" title="gitlogue"><img src="https://opengraph.githubassets.com/1778523874/unhappychoice/gitlogue" alt="gitlogue" width="100%" /></a></td>
+  </tr>
+  <tr>
+    <td align="center" width="25%"><a href="https://github.com/unhappychoice/gittype" title="gittype"><img src="https://opengraph.githubassets.com/1778523874/unhappychoice/gittype" alt="gittype" width="100%" /></a></td>
+    <td align="center" width="25%"><a href="https://github.com/unhappychoice/mdts" title="mdts"><img src="https://opengraph.githubassets.com/1778523874/unhappychoice/mdts" alt="mdts" width="100%" /></a></td>
+    <td align="center" width="25%"><a href="https://github.com/unhappychoice/steamfetch" title="steamfetch"><img src="https://opengraph.githubassets.com/1778523874/unhappychoice/steamfetch" alt="steamfetch" width="100%" /></a></td>
+    <td align="center" width="25%"><a href="https://github.com/unhappychoice/splashboard" title="splashboard"><img src="https://opengraph.githubassets.com/1778523874/unhappychoice/splashboard" alt="splashboard" width="100%" /></a></td>
+  </tr>
+</table>
+<!-- featured:end -->
+
+## Activity
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./showcase-dark.svg" />
   <source media="(prefers-color-scheme: light)" srcset="./showcase.svg" />
-  <img alt="Featured Projects" src="./showcase.svg" />
+  <img alt="Contributions in the last year" src="./showcase.svg" />
 </picture>
+
+## Recent
+
+<!-- activity:start -->
+- Starred [kawarimidoll/typograssy](https://github.com/kawarimidoll/typograssy) — *5m ago*
+- Opened PR [#2](https://github.com/unhappychoice/unhappychoice/pull/2) in [unhappychoice/unhappychoice](https://github.com/unhappychoice/unhappychoice) — *7m ago*
+- Reviewed PR [#707](https://github.com/unhappychoice/mdts/pull/707) in [unhappychoice/mdts](https://github.com/unhappychoice/mdts) — *4h ago*
+- Reviewed PR [#706](https://github.com/unhappychoice/mdts/pull/706) in [unhappychoice/mdts](https://github.com/unhappychoice/mdts) — *4h ago*
+- Reviewed PR [#705](https://github.com/unhappychoice/mdts/pull/705) in [unhappychoice/mdts](https://github.com/unhappychoice/mdts) — *4h ago*
+- Reviewed PR [#51](https://github.com/unhappychoice/steamfetch/pull/51) in [unhappychoice/steamfetch](https://github.com/unhappychoice/steamfetch) — *4h ago*
+<!-- activity:end -->
 
