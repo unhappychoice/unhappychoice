@@ -11,11 +11,18 @@
 - Web, API, iOS, Android, SPA, Infrastructure, Everything to solve real-world problems
 - ex: [@orderlyjp](https://github.com/orderlyjp) / [@seibii](https://github.com/seibii) / [@appbrew](https://github.com/appbrew) / [@oneteam-dev](https://github.com/oneteam-dev)
 
-| Interests&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Motto&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Links&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
-|:--------- |:----- |:----- |
-| <br><ul><li>Programming :computer: &nbsp;( obviously</li><li>UI design :art:</li><li>Math / Physics</li><li>Drumming :drum: &nbsp;/ Singing :microphone:</li><li>SF movies :clapper:</li></ul> | <blockquote>Knowledge is power, France is Bacon</blockquote>:fr: `==` :bacon:<br><br>Ref: [Reddit comment](https://www.reddit.com/r/AskReddit/comments/dxosj/comment/c13pbyc) | <br><ul><li>[blog](https://blog.unhappychoice.com)</li><li>[RubyGems.org](https://rubygems.org/profiles/unhappychoice)</li><li>[npm](https://www.npmjs.com/~unhappychoice)</li><li>[Linkedin](https://www.linkedin.com/in/裕史-上木-4a17a5101)</li><li>[Twitter](https://twitter.com/unhappychoice_e)</li></ul>|
+<p>
+  <a href="https://blog.unhappychoice.com"><img src="https://img.shields.io/badge/Blog-blog.unhappychoice.com-7B68EE?style=flat&logo=hashnode&logoColor=white" alt="Blog" /></a>
+  <a href="https://rubygems.org/profiles/unhappychoice"><img src="https://img.shields.io/badge/RubyGems-unhappychoice-E9573F?style=flat&logo=rubygems&logoColor=white" alt="RubyGems" /></a>
+  <a href="https://www.npmjs.com/~unhappychoice"><img src="https://img.shields.io/badge/npm-unhappychoice-CB3837?style=flat&logo=npm&logoColor=white" alt="npm" /></a>
+  <a href="https://www.linkedin.com/in/裕史-上木-4a17a5101"><img src="https://img.shields.io/badge/LinkedIn-Yuji_Ueki-0A66C2?style=flat&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
+  <a href="https://twitter.com/unhappychoice_e"><img src="https://img.shields.io/badge/X-@unhappychoice__e-000000?style=flat&logo=x&logoColor=white" alt="X" /></a>
+</p>
 
-[![committers.top badge](https://user-badge.committers.top/japan_private/unhappychoice.svg)](https://user-badge.committers.top/japan_private/unhappychoice) [![Total Stars](https://img.shields.io/github/stars/unhappychoice?affiliations=OWNER%2CCOLLABORATOR&style=flat&label=GitHub%20total%20stars&logo=github)](https://github.com/unhappychoice?tab=repositories)  
+<p>
+  <a href="https://user-badge.committers.top/japan_private/unhappychoice"><img src="https://user-badge.committers.top/japan_private/unhappychoice.svg" alt="committers.top badge" /></a>
+  <a href="https://github.com/unhappychoice?tab=repositories"><img src="https://img.shields.io/github/stars/unhappychoice?affiliations=OWNER%2CCOLLABORATOR&style=flat&label=GitHub%20total%20stars&logo=github" alt="Total Stars" /></a>
+</p>
 
 ## Featured Projects
 
