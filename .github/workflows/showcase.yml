@@ -1,0 +1,42 @@
+name: Generate Showcase
+
+on:
+  schedule:
+    - cron: '17 0 * * 1'
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - 'scripts/generate-showcase.mjs'
+      - '.github/workflows/showcase.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: showcase
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Generate showcase SVGs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/generate-showcase.mjs
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add showcase.svg showcase-dark.svg
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update project showcase"
+            git push
+          fi

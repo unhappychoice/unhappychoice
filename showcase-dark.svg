@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="816" height="400" viewBox="0 0 816 400" role="img" aria-label="Featured Projects">
+  <rect width="816" height="400" rx="8" fill="#0d1117" />
+  <text x="16" y="38" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#e6edf3">Featured Projects</text>
+  <text x="800" y="38" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#8d96a0">@unhappychoice</text>
+  
+  <g transform="translate(16, 64)">
+    <rect width="384" height="96" rx="6" ry="6" fill="#161b22" stroke="#30363d" />
+    <text x="14" y="24" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#58a6ff">gitlogue</text>
+    <text x="14" y="48" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#e6edf3">A cinematic Git commit replay tool for the terminal, tu…</text>
+    <g transform="translate(14, 82)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#8d96a0">
+      <text>★ 4723</text>
+      <text x="56">Rust</text>
+    </g>
+  </g>
+
+  <g transform="translate(416, 64)">
+    <rect width="384" height="96" rx="6" ry="6" fill="#161b22" stroke="#30363d" />
+    <text x="14" y="24" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#58a6ff">gittype</text>
+    <text x="14" y="48" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#e6edf3">A CLI code-typing game that turns your source code into…</text>
+    <g transform="translate(14, 82)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#8d96a0">
+      <text>★ 1094</text>
+      <text x="56">Rust</text>
+    </g>
+  </g>
+
+  <g transform="translate(16, 176)">
+    <rect width="384" height="96" rx="6" ry="6" fill="#161b22" stroke="#30363d" />
+    <text x="14" y="24" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#58a6ff">mdts</text>
+    <text x="14" y="48" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#e6edf3">A local markdown preview server. npx mdts — and you're …</text>
+    <g transform="translate(14, 82)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#8d96a0">
+      <text>★ 181</text>
+      <text x="56">TypeScript</text>
+    </g>
+  </g>
+
+  <g transform="translate(416, 176)">
+    <rect width="384" height="96" rx="6" ry="6" fill="#161b22" stroke="#30363d" />
+    <text x="14" y="24" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#58a6ff">steamfetch</text>
+    <text x="14" y="48" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#e6edf3">neofetch for Steam - Display your Steam stats in termin…</text>
+    <g transform="translate(14, 82)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#8d96a0">
+      <text>★ 173</text>
+      <text x="56">Rust</text>
+    </g>
+  </g>
+
+  <g transform="translate(16, 288)">
+    <rect width="384" height="96" rx="6" ry="6" fill="#161b22" stroke="#30363d" />
+    <text x="14" y="24" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#58a6ff">splashboard</text>
+    <text x="14" y="48" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#e6edf3">A customizable terminal splash screen with plugin-based…</text>
+    <g transform="translate(14, 82)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#8d96a0">
+      <text>★ 76</text>
+      <text x="56">Rust</text>
+    </g>
+  </g>
+
+  <g transform="translate(416, 288)">
+    <rect width="384" height="96" rx="6" ry="6" fill="#161b22" stroke="#30363d" />
+    <text x="14" y="24" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#58a6ff">terminal_image</text>
+    <text x="14" y="48" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#e6edf3">:desktop_computer: Show high resolution images on your …</text>
+    <g transform="translate(14, 82)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#8d96a0">
+      <text>★ 43</text>
+      <text x="56">Ruby</text>
+    </g>
+  </g>
+
+</svg>
