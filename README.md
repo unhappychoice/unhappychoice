@@ -21,28 +21,28 @@
 
 <!-- featured:start -->
 <div align="center">
-  <a href="https://unhappychoice.com/oss/">
+  <a href="https://github.com/unhappychoice/splashboard">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="./showcase-splashboard-dark.svg" />
       <source media="(prefers-color-scheme: light)" srcset="./showcase-splashboard.svg" />
       <img alt="splashboard" src="./showcase-splashboard.svg" />
     </picture>
   </a>
-  <a href="https://unhappychoice.com/oss/">
+  <a href="https://github.com/unhappychoice/gitlogue">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="./showcase-gitlogue-dark.svg" />
       <source media="(prefers-color-scheme: light)" srcset="./showcase-gitlogue.svg" />
       <img alt="gitlogue" src="./showcase-gitlogue.svg" />
     </picture>
   </a>
-  <a href="https://unhappychoice.com/oss/">
+  <a href="https://github.com/unhappychoice/gittype">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="./showcase-gittype-dark.svg" />
       <source media="(prefers-color-scheme: light)" srcset="./showcase-gittype.svg" />
       <img alt="gittype" src="./showcase-gittype.svg" />
     </picture>
   </a>
-  <a href="https://unhappychoice.com/oss/">
+  <a href="https://github.com/unhappychoice/mdts">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="./showcase-mdts-dark.svg" />
       <source media="(prefers-color-scheme: light)" srcset="./showcase-mdts.svg" />

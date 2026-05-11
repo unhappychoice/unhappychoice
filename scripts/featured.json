@@ -1,8 +1,8 @@
 {
   "repos": [
-    { "name": "splashboard", "link": "https://unhappychoice.com/oss/" },
-    { "name": "gitlogue", "link": "https://unhappychoice.com/oss/" },
-    { "name": "gittype", "link": "https://unhappychoice.com/oss/" },
-    { "name": "mdts", "link": "https://unhappychoice.com/oss/" }
+    "splashboard",
+    "gitlogue",
+    "gittype",
+    "mdts"
   ]
 }
