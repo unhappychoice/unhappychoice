@@ -17,13 +17,20 @@
       to   { opacity: 1; transform: translateY(0); }
     }
     .star.fade-in {
-      animation: fade-in 520ms ease-out 160ms backwards, star-pulse 3.6s ease-in-out 2.5s infinite;
+      animation: fade-in 520ms ease-out 160ms backwards, star-pulse 2.6s ease-in-out 2.2s infinite;
       transform-origin: center;
       transform-box: fill-box;
     }
     @keyframes star-pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50%      { opacity: 0.78; transform: scale(0.96); }
+      50%      { opacity: 0.65; transform: scale(1.12); }
+    }
+    .cell.recent {
+      animation: cell-in 420ms cubic-bezier(0.16, 1, 0.3, 1) backwards, recent-pulse 2.4s ease-in-out 2.4s infinite;
+    }
+    @keyframes recent-pulse {
+      0%, 100% { opacity: 1;   transform: scale(1); }
+      50%      { opacity: 0.55; transform: scale(1.25); }
     }
     text.fade-in, image.fade-in, g.fade-in {
       transform-box: fill-box;
@@ -42,9 +49,9 @@
       <text class="fade-in" style="animation-delay:1100ms" x="390" y="130" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#e6edf3">• Merged PR #203</text>
     <text class="fade-in" style="animation-delay:1100ms" x="786" y="130" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="10" fill="#8d96a0" text-anchor="end">4d ago</text>
     <text class="fade-in" style="animation-delay:1190ms" x="390" y="146" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#e6edf3">• Opened PR #203</text>
-    <text class="fade-in" style="animation-delay:1190ms" x="786" y="146" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="10" fill="#8d96a0" text-anchor="end">4d ago</text>
+    <text class="fade-in" style="animation-delay:1190ms" x="786" y="146" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="10" fill="#8d96a0" text-anchor="end">5d ago</text>
     <text class="fade-in" style="animation-delay:1280ms" x="390" y="162" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#e6edf3">• Created branch ci/codecov-coverage</text>
-    <text class="fade-in" style="animation-delay:1280ms" x="786" y="162" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="10" fill="#8d96a0" text-anchor="end">4d ago</text>
+    <text class="fade-in" style="animation-delay:1280ms" x="786" y="162" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="10" fill="#8d96a0" text-anchor="end">5d ago</text>
     <text class="fade-in" style="animation-delay:1370ms" x="390" y="178" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#e6edf3">• Reviewed PR #202</text>
     <text class="fade-in" style="animation-delay:1370ms" x="786" y="178" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="10" fill="#8d96a0" text-anchor="end">6d ago</text>
     </g>

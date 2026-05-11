@@ -243,13 +243,16 @@ const renderGrass = (grid, x, y, theme) => {
     return 4;
   };
   const step = GRASS_CELL + GRASS_GAP;
+  const lastCol = grid.length - 1;
   return grid
     .flatMap((week, xi) =>
       week.map((count, yi) => {
         const cx = x + xi * step;
         const cy = y + yi * step;
         const delay = 200 + xi * 12 + yi * 3;
-        return `<rect class="cell" style="animation-delay:${delay}ms" x="${cx}" y="${cy}" width="${GRASS_CELL}" height="${GRASS_CELL}" rx="1.5" ry="1.5" fill="${theme.grass[bucket(count)]}" />`;
+        const isRecent = xi === lastCol && count > 0;
+        const cls = isRecent ? 'cell recent' : 'cell';
+        return `<rect class="${cls}" style="animation-delay:${delay}ms" x="${cx}" y="${cy}" width="${GRASS_CELL}" height="${GRASS_CELL}" rx="1.5" ry="1.5" fill="${theme.grass[bucket(count)]}" />`;
       }),
     )
     .join('');
@@ -325,13 +328,20 @@ const renderOne = (card, themeName) => {
       to   { opacity: 1; transform: translateY(0); }
     }
     .star.fade-in {
-      animation: fade-in 520ms ease-out 160ms backwards, star-pulse 3.6s ease-in-out 2.5s infinite;
+      animation: fade-in 520ms ease-out 160ms backwards, star-pulse 2.6s ease-in-out 2.2s infinite;
       transform-origin: center;
       transform-box: fill-box;
     }
     @keyframes star-pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50%      { opacity: 0.78; transform: scale(0.96); }
+      50%      { opacity: 0.65; transform: scale(1.12); }
+    }
+    .cell.recent {
+      animation: cell-in 420ms cubic-bezier(0.16, 1, 0.3, 1) backwards, recent-pulse 2.4s ease-in-out 2.4s infinite;
+    }
+    @keyframes recent-pulse {
+      0%, 100% { opacity: 1;   transform: scale(1); }
+      50%      { opacity: 0.55; transform: scale(1.25); }
     }
     text.fade-in, image.fade-in, g.fade-in {
       transform-box: fill-box;
