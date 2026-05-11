@@ -248,7 +248,8 @@ const renderGrass = (grid, x, y, theme) => {
       week.map((count, yi) => {
         const cx = x + xi * step;
         const cy = y + yi * step;
-        return `<rect x="${cx}" y="${cy}" width="${GRASS_CELL}" height="${GRASS_CELL}" rx="1.5" ry="1.5" fill="${theme.grass[bucket(count)]}" />`;
+        const delay = xi * 18 + yi * 4;
+        return `<rect class="cell" style="animation-delay:${delay}ms" x="${cx}" y="${cy}" width="${GRASS_CELL}" height="${GRASS_CELL}" rx="1.5" ry="1.5" fill="${theme.grass[bucket(count)]}" />`;
       }),
     )
     .join('');
@@ -303,6 +304,24 @@ const renderOne = (card, themeName) => {
   const H = CARD_H + PAD_OUT * 2;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${escape(card.repo.name)}">
+  <style>
+    .cell {
+      animation: cell-in 420ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+    @keyframes cell-in {
+      from { opacity: 0; transform: scale(0.2); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .fade-in {
+      animation: fade-in 480ms ease-out backwards;
+    }
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+  </style>
   <rect width="${W}" height="${H}" fill="${theme.bg}" />
   <g transform="translate(${PAD_OUT}, ${PAD_OUT})">
     ${renderCard(0, card, theme)}
