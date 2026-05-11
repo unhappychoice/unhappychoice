@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-import { writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { Buffer } from 'node:buffer';
 
 const USER = 'unhappychoice';
-const FEATURED_COUNT = 5;
 const EVENTS_PER_CARD = 4;
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 
 const headers = () => {
   const h = { 'User-Agent': USER, Accept: 'application/vnd.github+json' };
@@ -50,15 +50,17 @@ const fetchJson = async (url) => {
   return res.json();
 };
 
-const fetchTopRepos = async () => {
-  const repos = await fetchJson(
-    `https://api.github.com/users/${USER}/repos?per_page=100&type=owner&sort=updated`,
-  );
-  return repos
-    .filter((r) => !r.fork && !r.archived && !r.private && r.name !== USER)
-    .sort((a, b) => b.stargazers_count - a.stargazers_count)
-    .slice(0, FEATURED_COUNT);
+const loadFeaturedConfig = async () => {
+  const text = await readFile(resolve(SCRIPT_DIR, 'featured.json'), 'utf8');
+  return JSON.parse(text);
 };
+
+const fetchRepo = async (slug) => {
+  const fullName = slug.includes('/') ? slug : `${USER}/${slug}`;
+  return fetchJson(`https://api.github.com/repos/${fullName}`);
+};
+
+const fetchFeaturedRepos = async (slugs) => Promise.all(slugs.map(fetchRepo));
 
 const fetchOgDataUri = async (fullName) => {
   try {
@@ -209,8 +211,7 @@ const THEMES = {
 const CARD_W = 800;
 const CARD_H = 200;
 const CARD_GAP = 14;
-const PAD_OUT = 14;
-const HEADER_H = 36;
+const PAD_OUT = 8;
 
 const OG_X = 12;
 const OG_Y = 12;
@@ -280,33 +281,34 @@ const renderCard = (i, { repo, og, grass, totalCommits, events }, theme) => {
         .join('\n    ')
     : `<text x="${INFO_X}" y="${eventsStartY}" font-family="${FONT}" font-size="11" fill="${theme.muted}" font-style="italic">No recent activity</text>`;
 
-  return `<g transform="translate(0, ${i * (CARD_H + CARD_GAP)})">
-    ${ogBlock}
-    <text x="${INFO_X}" y="${titleY}" font-family="${FONT}" font-size="16" font-weight="700" fill="${theme.title}">${escape(repo.name)}</text>
-    <text x="${INFO_X + INFO_W}" y="${titleY}" font-family="${FONT}" font-size="13" font-weight="600" fill="${theme.star}" text-anchor="end">★ ${repo.stargazers_count.toLocaleString()}</text>
-    ${grassBlock}
-    <text x="${INFO_X}" y="${statsY}" font-family="${FONT}" font-size="11" fill="${theme.muted}">${totalCommits.toLocaleString()} commits / 52w · pushed ${relativeTime(repo.pushed_at)}</text>
-    ${eventBlock}
-  </g>`;
+  return `<a href="${escape(repo.html_url)}" target="_blank">
+    <g transform="translate(0, ${i * (CARD_H + CARD_GAP)})">
+      ${ogBlock}
+      <text x="${INFO_X}" y="${titleY}" font-family="${FONT}" font-size="16" font-weight="700" fill="${theme.title}">${escape(repo.name)}</text>
+      <text x="${INFO_X + INFO_W}" y="${titleY}" font-family="${FONT}" font-size="13" font-weight="600" fill="${theme.star}" text-anchor="end">★ ${repo.stargazers_count.toLocaleString()}</text>
+      ${grassBlock}
+      <text x="${INFO_X}" y="${statsY}" font-family="${FONT}" font-size="11" fill="${theme.muted}">${totalCommits.toLocaleString()} commits / 52w · pushed ${relativeTime(repo.pushed_at)}</text>
+      ${eventBlock}
+    </g>
+  </a>`;
 };
 
 const render = (cards, themeName) => {
   const theme = THEMES[themeName];
   const W = CARD_W + PAD_OUT * 2;
-  const H = HEADER_H + PAD_OUT + cards.length * (CARD_H + CARD_GAP) - CARD_GAP + PAD_OUT;
+  const H = PAD_OUT + cards.length * (CARD_H + CARD_GAP) - CARD_GAP + PAD_OUT;
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Featured Projects">
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Featured Projects">
   <rect width="${W}" height="${H}" fill="${theme.bg}" />
-  <text x="${PAD_OUT}" y="${PAD_OUT + 18}" font-family="${FONT}" font-size="16" font-weight="700" fill="${theme.text}">Featured Projects</text>
-  <text x="${W - PAD_OUT}" y="${PAD_OUT + 18}" text-anchor="end" font-family="${FONT}" font-size="11" fill="${theme.muted}">@${USER}</text>
-  <g transform="translate(${PAD_OUT}, ${HEADER_H + PAD_OUT})">
+  <g transform="translate(${PAD_OUT}, ${PAD_OUT})">
     ${cards.map((c, i) => renderCard(i, c, theme)).join('\n    ')}
   </g>
 </svg>
 `;
 };
 
-const repos = await fetchTopRepos();
+const config = await loadFeaturedConfig();
+const repos = await fetchFeaturedRepos(config.repos);
 console.log(`Repos: ${repos.map((r) => r.name).join(', ')}`);
 
 const enriched = await Promise.all(
