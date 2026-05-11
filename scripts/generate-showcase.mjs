@@ -5,7 +5,7 @@ import { dirname, resolve } from 'node:path';
 
 const USER = 'unhappychoice';
 const FEATURED_COUNT = 5;
-const ACTIVITY_COUNT = 6;
+const EVENTS_PER_CARD = 4;
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 const headers = () => {
@@ -26,6 +26,7 @@ const capitalize = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : '');
 const relativeTime = (iso) => {
   const diff = (Date.now() - new Date(iso).getTime()) / 1000;
   const d = Math.floor(diff / 86400);
+  if (d >= 365) return `${Math.floor(d / 365)}y ago`;
   if (d >= 30) return `${Math.floor(d / 30)}mo ago`;
   if (d >= 7) return `${Math.floor(d / 7)}w ago`;
   if (d >= 1) return `${d}d ago`;
@@ -35,234 +36,158 @@ const relativeTime = (iso) => {
   return m >= 1 ? `${m}m ago` : 'just now';
 };
 
+const SPARK_CHARS = '▁▂▃▄▅▆▇█';
+const sparkline = (values) => {
+  if (!values?.length) return '';
+  const max = Math.max(1, ...values);
+  return values
+    .map((v) => SPARK_CHARS[Math.min(SPARK_CHARS.length - 1, Math.floor((v / max) * SPARK_CHARS.length))])
+    .join('');
+};
+
+const fetchJson = async (url) => {
+  const res = await fetch(url, { headers: headers() });
+  if (res.status === 202) return { _computing: true };
+  if (!res.ok) throw new Error(`${url} -> ${res.status}: ${await res.text()}`);
+  return res.json();
+};
+
 const fetchTopRepos = async () => {
-  const res = await fetch(
+  const repos = await fetchJson(
     `https://api.github.com/users/${USER}/repos?per_page=100&type=owner&sort=updated`,
-    { headers: headers() },
   );
-  if (!res.ok) throw new Error(`repos ${res.status}: ${await res.text()}`);
-  const repos = await res.json();
   return repos
     .filter((r) => !r.fork && !r.archived && !r.private && r.name !== USER)
     .sort((a, b) => b.stargazers_count - a.stargazers_count)
     .slice(0, FEATURED_COUNT);
 };
 
-const fetchEvents = async () => {
-  const res = await fetch(
-    `https://api.github.com/users/${USER}/events/public?per_page=100`,
-    { headers: headers() },
-  );
-  if (!res.ok) throw new Error(`events ${res.status}: ${await res.text()}`);
-  return res.json();
-};
-
-const fetchContributions = async () => {
-  if (!process.env.GITHUB_TOKEN) {
-    console.warn('No GITHUB_TOKEN — skipping contribution heatmap');
-    return null;
-  }
-  const query = `query {
-    user(login: "${USER}") {
-      contributionsCollection {
-        contributionCalendar {
-          totalContributions
-          weeks {
-            contributionDays { contributionCount date weekday }
-          }
-        }
-      }
-    }
-  }`;
-  const res = await fetch('https://api.github.com/graphql', {
-    method: 'POST',
-    headers: { ...headers(), 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query }),
+const fetchOgImage = async (fullName) => {
+  const res = await fetch(`https://github.com/${fullName}`, {
+    headers: { 'User-Agent': USER },
+    redirect: 'follow',
   });
-  if (!res.ok) throw new Error(`graphql ${res.status}: ${await res.text()}`);
-  const json = await res.json();
-  if (json.errors) throw new Error(`graphql errors: ${JSON.stringify(json.errors)}`);
-  return json.data.user.contributionsCollection.contributionCalendar;
+  if (!res.ok) return null;
+  const html = await res.text();
+  const match = html.match(/<meta property="og:image" content="([^"]+)"/);
+  return match?.[1] ?? null;
 };
 
-const renderFeatured = (repos) => {
-  const ts = Math.floor(Date.now() / 1000);
-  const og = (r) => `https://opengraph.githubassets.com/${ts}/${r.full_name}`;
-  const link = (r, img) =>
-    `<a href="${escape(r.html_url)}" title="${escape(r.name)}">${img}</a>`;
-  const hero = repos[0];
-  const rest = repos.slice(1, 5);
-
-  const heroImg = `<img src="${og(hero)}" alt="${escape(hero.name)}" width="100%" />`;
-  const subCells = rest
-    .map((r) => `    <td align="center" width="25%">${link(r, `<img src="${og(r)}" alt="${escape(r.name)}" width="100%" />`)}</td>`)
-    .join('\n');
-
-  return `<table>
-  <tr>
-    <td align="center" colspan="4">${link(hero, heroImg)}</td>
-  </tr>
-  <tr>
-${subCells}
-  </tr>
-</table>`;
+const fetchParticipation = async (fullName) => {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const data = await fetchJson(`https://api.github.com/repos/${fullName}/stats/participation`);
+      if (data._computing) {
+        await new Promise((r) => setTimeout(r, 2000));
+        continue;
+      }
+      return data;
+    } catch (e) {
+      console.warn(`participation ${fullName}: ${e.message}`);
+      return null;
+    }
+  }
+  return null;
 };
 
-const formatEvent = (e) => {
+const fetchRepoEvents = async (fullName) => {
+  try {
+    const events = await fetchJson(`https://api.github.com/repos/${fullName}/events?per_page=50`);
+    return events.filter((e) => e.actor?.login === USER);
+  } catch (e) {
+    console.warn(`events ${fullName}: ${e.message}`);
+    return [];
+  }
+};
+
+const formatRepoEvent = (e) => {
   const ago = relativeTime(e.created_at);
-  const repo = e.repo.name;
-  const repoUrl = `https://github.com/${repo}`;
-  const link = (text, url) => `[${text}](${url})`;
-  const prUrl = (n) => `${repoUrl}/pull/${n}`;
-  const issueUrl = (n) => `${repoUrl}/issues/${n}`;
+  const repoUrl = `https://github.com/${e.repo.name}`;
   switch (e.type) {
     case 'PushEvent': {
       const count = e.payload.distinct_size ?? e.payload.size ?? e.payload.commits?.length ?? 0;
       if (count === 0) return null;
-      return `- Pushed ${count} commit${count > 1 ? 's' : ''} to ${link(repo, repoUrl)} — *${ago}*`;
+      const branch = e.payload.ref?.replace('refs/heads/', '');
+      return `Pushed ${count} commit${count > 1 ? 's' : ''}${branch ? ` to <code>${escape(branch)}</code>` : ''} <sub>${ago}</sub>`;
     }
     case 'PullRequestEvent': {
       const pr = e.payload.pull_request;
-      const action = e.payload.action === 'closed' && pr.merged ? 'merged' : e.payload.action;
-      return `- ${capitalize(action)} PR ${link(`#${pr.number}`, prUrl(pr.number))} in ${link(repo, repoUrl)} — *${ago}*`;
+      const action = e.payload.action === 'closed' && pr.merged ? 'Merged' : capitalize(e.payload.action);
+      return `${action} PR <a href="${repoUrl}/pull/${pr.number}">#${pr.number}</a> <sub>${ago}</sub>`;
+    }
+    case 'PullRequestReviewEvent': {
+      const n = e.payload.pull_request.number;
+      return `Reviewed PR <a href="${repoUrl}/pull/${n}">#${n}</a> <sub>${ago}</sub>`;
     }
     case 'ReleaseEvent': {
       const r = e.payload.release;
       const url = r.html_url ?? `${repoUrl}/releases/tag/${r.tag_name}`;
-      return `- Released ${link(r.tag_name, url)} in ${link(repo, repoUrl)} — *${ago}*`;
+      return `Released <a href="${url}">${escape(r.tag_name)}</a> <sub>${ago}</sub>`;
     }
-    case 'WatchEvent':
-      return `- Starred ${link(repo, repoUrl)} — *${ago}*`;
-    case 'CreateEvent':
-      if (e.payload.ref_type === 'repository') {
-        return `- Created repository ${link(repo, repoUrl)} — *${ago}*`;
-      }
+    case 'CreateEvent': {
+      if (e.payload.ref_type === 'tag') return `Tagged <code>${escape(e.payload.ref)}</code> <sub>${ago}</sub>`;
+      if (e.payload.ref_type === 'branch') return `Created branch <code>${escape(e.payload.ref)}</code> <sub>${ago}</sub>`;
+      if (e.payload.ref_type === 'repository') return `Created the repository <sub>${ago}</sub>`;
       return null;
+    }
     case 'IssuesEvent': {
       const i = e.payload.issue;
-      return `- ${capitalize(e.payload.action)} issue ${link(`#${i.number}`, issueUrl(i.number))} in ${link(repo, repoUrl)} — *${ago}*`;
+      return `${capitalize(e.payload.action)} issue <a href="${repoUrl}/issues/${i.number}">#${i.number}</a> <sub>${ago}</sub>`;
     }
-    case 'PullRequestReviewEvent': {
-      const n = e.payload.pull_request.number;
-      return `- Reviewed PR ${link(`#${n}`, prUrl(n))} in ${link(repo, repoUrl)} — *${ago}*`;
+    case 'IssueCommentEvent': {
+      const i = e.payload.issue;
+      const kind = i.pull_request ? 'PR' : 'issue';
+      const path = i.pull_request ? 'pull' : 'issues';
+      return `Commented on ${kind} <a href="${repoUrl}/${path}/${i.number}">#${i.number}</a> <sub>${ago}</sub>`;
     }
     default:
       return null;
   }
 };
 
-const renderActivity = (events) => {
+const pickEvents = (events) => {
   const seen = new Set();
   const out = [];
   for (const e of events) {
-    const line = formatEvent(e);
+    const line = formatRepoEvent(e);
     if (!line) continue;
-    const key = line.split(' — ')[0];
+    const key = line.replace(/<sub>.*?<\/sub>/, '').trim();
     if (seen.has(key)) continue;
     seen.add(key);
     out.push(line);
-    if (out.length >= ACTIVITY_COUNT) break;
+    if (out.length >= EVENTS_PER_CARD) break;
   }
-  return out.join('\n');
+  return out;
 };
 
-const HEATMAP_THEMES = {
-  light: {
-    bg: '#ffffff',
-    text: '#1f2328',
-    muted: '#59636e',
-    scale: ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39'],
-  },
-  dark: {
-    bg: '#0d1117',
-    text: '#e6edf3',
-    muted: '#8d96a0',
-    scale: ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'],
-  },
-};
+const renderCard = ({ repo, ogImage, participation, events }) => {
+  const ownerCommits = participation?.owner ?? [];
+  const spark = sparkline(ownerCommits);
+  const totalYear = ownerCommits.reduce((a, b) => a + b, 0);
+  const lastPush = relativeTime(repo.pushed_at);
+  const lines = pickEvents(events);
+  const eventList = lines.length
+    ? `<ul>\n${lines.map((l) => `        <li>${l}</li>`).join('\n')}\n      </ul>`
+    : '<sub><em>No recent activity</em></sub>';
 
-const renderHeatmap = (cal, themeName) => {
-  const t = HEATMAP_THEMES[themeName];
-  const cell = 11;
-  const gap = 3;
-  const padLeft = 30;
-  const padTop = 36;
-  const padRight = 16;
-  const padBottom = 28;
+  const ogSrc = ogImage ?? `https://opengraph.githubassets.com/${Date.now()}/${repo.full_name}`;
+  const desc = repo.description ? `<sub>${escape(repo.description)}</sub><br/>` : '';
+  const sparkBlock = spark
+    ? `<code>${spark}</code> &nbsp; <sub>${totalYear} commits / 52w</sub> &nbsp; · &nbsp; `
+    : '';
 
-  const weeks = cal.weeks;
-  const max = Math.max(1, ...weeks.flatMap((w) => w.contributionDays.map((d) => d.contributionCount)));
-  const bucket = (c) => {
-    if (c === 0) return 0;
-    const r = c / max;
-    if (r <= 0.25) return 1;
-    if (r <= 0.5) return 2;
-    if (r <= 0.75) return 3;
-    return 4;
-  };
-
-  const width = padLeft + weeks.length * (cell + gap) - gap + padRight;
-  const height = padTop + 7 * (cell + gap) - gap + padBottom;
-  const font = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
-
-  const months = [];
-  let lastMonth = -1;
-  weeks.forEach((wk, x) => {
-    const first = wk.contributionDays[0];
-    if (!first) return;
-    const m = new Date(first.date).getUTCMonth();
-    if (m !== lastMonth && x > 0 && x < weeks.length - 2) {
-      const label = new Date(first.date).toLocaleString('en-US', { month: 'short', timeZone: 'UTC' });
-      months.push(
-        `<text x="${padLeft + x * (cell + gap)}" y="${padTop - 10}" font-family="${font}" font-size="10" fill="${t.muted}">${label}</text>`,
-      );
-      lastMonth = m;
-    } else if (lastMonth === -1) {
-      lastMonth = m;
-    }
-  });
-
-  const dayLabels = [
-    { y: 1, label: 'Mon' },
-    { y: 3, label: 'Wed' },
-    { y: 5, label: 'Fri' },
-  ]
-    .map(
-      ({ y, label }) =>
-        `<text x="${padLeft - 8}" y="${padTop + y * (cell + gap) + cell - 1}" font-family="${font}" font-size="10" fill="${t.muted}" text-anchor="end">${label}</text>`,
-    )
-    .join('');
-
-  const cells = weeks
-    .flatMap((wk, x) =>
-      wk.contributionDays.map((d) => {
-        const cx = padLeft + x * (cell + gap);
-        const cy = padTop + d.weekday * (cell + gap);
-        return `<rect x="${cx}" y="${cy}" width="${cell}" height="${cell}" rx="2" ry="2" fill="${t.scale[bucket(d.contributionCount)]}"><title>${d.contributionCount} on ${d.date}</title></rect>`;
-      }),
-    )
-    .join('');
-
-  const legendY = height - 16;
-  const legendX = width - padRight - (5 * (cell + gap) - gap) - 32;
-  const legendCells = t.scale
-    .map(
-      (c, i) =>
-        `<rect x="${legendX + 28 + i * (cell + gap)}" y="${legendY - cell + 2}" width="${cell}" height="${cell}" rx="2" ry="2" fill="${c}" />`,
-    )
-    .join('');
-
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="Contribution heatmap">
-  <rect width="${width}" height="${height}" fill="${t.bg}" />
-  <text x="${padLeft - 22}" y="20" font-family="${font}" font-size="13" font-weight="600" fill="${t.text}">${cal.totalContributions.toLocaleString()} contributions in the last year</text>
-  ${months.join('\n  ')}
-  ${dayLabels}
-  ${cells}
-  <text x="${legendX}" y="${legendY}" font-family="${font}" font-size="10" fill="${t.muted}">Less</text>
-  ${legendCells}
-  <text x="${legendX + 28 + 5 * (cell + gap)}" y="${legendY}" font-family="${font}" font-size="10" fill="${t.muted}">More</text>
-</svg>
-`;
+  return `<table>
+  <tr>
+    <td width="45%" valign="top">
+      <a href="${escape(repo.html_url)}"><img src="${escape(ogSrc)}" alt="${escape(repo.name)}" width="100%" /></a>
+    </td>
+    <td valign="top">
+      <h3>★ ${repo.stargazers_count.toLocaleString()} &nbsp; <a href="${escape(repo.html_url)}">${escape(repo.name)}</a></h3>
+      ${desc}${sparkBlock}<sub>pushed ${lastPush}</sub>
+      ${eventList}
+    </td>
+  </tr>
+</table>`;
 };
 
 const replaceMarker = (text, section, content) => {
@@ -274,23 +199,25 @@ const replaceMarker = (text, section, content) => {
 };
 
 const repos = await fetchTopRepos();
-const events = await fetchEvents();
-const cal = await fetchContributions();
+console.log(`Repos: ${repos.map((r) => r.name).join(', ')}`);
 
-const featuredHtml = renderFeatured(repos);
-const activityMd = renderActivity(events);
+const enriched = await Promise.all(
+  repos.map(async (repo) => {
+    const [ogImage, participation, events] = await Promise.all([
+      fetchOgImage(repo.full_name),
+      fetchParticipation(repo.full_name),
+      fetchRepoEvents(repo.full_name),
+    ]);
+    console.log(`  ${repo.name}: og=${ogImage ? 'ok' : 'fallback'}, participation=${participation ? 'ok' : 'n/a'}, events=${events.length}`);
+    return { repo, ogImage, participation, events };
+  }),
+);
 
-if (cal) {
-  await writeFile(resolve(REPO_ROOT, 'showcase.svg'), renderHeatmap(cal, 'light'));
-  await writeFile(resolve(REPO_ROOT, 'showcase-dark.svg'), renderHeatmap(cal, 'dark'));
-}
+const featuredHtml = enriched.map(renderCard).join('\n');
 
 const readmePath = resolve(REPO_ROOT, 'README.md');
 let readme = await readFile(readmePath, 'utf8');
 readme = replaceMarker(readme, 'featured', featuredHtml);
-readme = replaceMarker(readme, 'activity', activityMd);
 await writeFile(readmePath, readme);
 
-console.log(`Featured: ${repos.map((r) => r.name).join(', ')}`);
-console.log(`Activity: ${activityMd.split('\n').length} events`);
-console.log(`Heatmap: ${cal ? `${cal.totalContributions} contributions` : 'skipped'}`);
+console.log('Done.');
