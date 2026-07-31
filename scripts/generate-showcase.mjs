@@ -23,6 +23,15 @@ const escape = (s) =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;');
 
+const unescape = (s) =>
+  String(s ?? '')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)))
+    .replace(/&amp;/g, '&');
+
 const capitalize = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : '');
 
 const truncate = (s, n) => {
@@ -72,9 +81,9 @@ const fetchOgDataUri = async (fullName) => {
     });
     if (!htmlRes.ok) return null;
     const html = await htmlRes.text();
-    const url = html.match(/<meta property="og:image" content="([^"]+)"/)?.[1];
+    const url = unescape(html.match(/<meta property="og:image" content="([^"]+)"/)?.[1]);
     if (!url) return null;
-    const imgRes = await fetch(url);
+    const imgRes = await fetch(url, { headers: { 'User-Agent': USER } });
     if (!imgRes.ok) return null;
     const buf = Buffer.from(await imgRes.arrayBuffer());
     const mime = imgRes.headers.get('content-type') || 'image/png';
